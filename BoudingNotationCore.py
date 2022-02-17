@@ -33,7 +33,6 @@ class BoudingNotationCore :
     def update(self) :
         self.view.loadImage(self.pathFolder + "/" +self.allFiles[self.currentImageIndex])
         self.view.setImgLabel(str(self.currentImageIndex+1) + "/" + str(len(self.allFiles)))
-        print(self.data)
 
     def getAllFiles(self) :
         print("get all files")
@@ -48,7 +47,6 @@ class BoudingNotationCore :
         for element in self.allFiles :
             if element[-4:] != ".jpg" and element[-4:] != ".png" :
                 self.allFiles.remove(element)
-        print(self.allFiles)
 
     def checkBoudingAnnot(self) :
         return "boudingAnnotations.csv" in self.allFiles
@@ -66,7 +64,23 @@ class BoudingNotationCore :
                 self.data.append(dict(row))
         print("all data is in data variable")
 
+    def tapOnPrevButton(self) :
+        if self.currentImageIndex > 0 and len(self.allFiles) > 0:
+            self.currentImageIndex -= 1
+            for el in self.data :
+                if el["pathFile"] == self.allFiles[self.currentImageIndex] :
+                    self.csvLine = self.data.index(el)
+                    break
+            self.update()
 
+    def tapOnNextButton(self) :
+        if self.currentImageIndex < len(self.allFiles)-1 and len(self.allFiles) > 0:
+            self.currentImageIndex += 1
+            for el in self.data :
+                if el["pathFile"] == self.allFiles[self.currentImageIndex] :
+                    self.csvLine = self.data.index(el)
+                    break
+            self.update()
 
 
 if __name__ == "__main__" :

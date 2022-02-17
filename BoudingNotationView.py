@@ -63,6 +63,8 @@ class Ui_MainWindow(object):
 
     def initConnect(self) :
         self.openAction.triggered.connect(self.openFolder)
+        self.leftBtn.clicked.connect(self.didTapOnLeftBtn)
+        self.rightBtn.clicked.connect(self.didTapOnRightBtn)
 
     def openFolder(self) :
         fname = QtWidgets.QFileDialog.getExistingDirectory()
@@ -75,7 +77,15 @@ class Ui_MainWindow(object):
     def loadImage(self, pathImage) :
         print(pathImage)
         self.currentImage = self.scene.addPixmap(QtGui.QPixmap(pathImage))
-        self.currentImage.setPos(0,0)
+
+    def didTapOnLeftBtn(self):
+        print("previous image")
+        self.core.tapOnPrevButton()
+
+    def didTapOnRightBtn(self) :
+        print("next image")
+        self.core.tapOnNextButton()
+
 
 if __name__ == "__main__" :
     app = QtWidgets.QApplication(sys.argv)
