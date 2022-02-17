@@ -2,18 +2,70 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from BoudingNotationView import *
 import sys
+import csv
+import os
 
 class BoudingNotationCore :
 
     def __init__(self) :
         self.view = None
         self.pathFolder = ""
+        self.allFiles = []
+        self.data = []
+        self.csvLine = 0
+        self.currentImageIndex = 0
 
     def setView(self, view):
         self.view = view
 
     def sendFolder(self, path) :
         self.pathFolder = path
+        self.initialization()
+        self.update()
+
+    def initialization(self) :
+        print("Init the begining of the process")
+        self.getAllFiles()
+        if len(self.data) :
+            self.csvLine = len(self.data)-1
+            self.currentImageIndex = self.allFiles.index(self.data[-1]["pathFile"])
+
+    def update(self) :
+        self.view.loadImage(self.pathFolder + "/" +self.allFiles[self.currentImageIndex])
+        self.view.setImgLabel(str(self.currentImageIndex+1) + "/" + str(len(self.allFiles)))
+        print(self.data)
+
+    def getAllFiles(self) :
+        print("get all files")
+        self.allFiles = os.listdir(self.pathFolder)
+        if not self.checkBoudingAnnot() :
+            print("no bouding annotation found try to create the csv")
+            self.createCSV()
+        self.cleanAllFiles()
+        self.openCSV()
+
+    def cleanAllFiles(self) :
+        for element in self.allFiles :
+            if element[-4:] != ".jpg" and element[-4:] != ".png" :
+                self.allFiles.remove(element)
+        print(self.allFiles)
+
+    def checkBoudingAnnot(self) :
+        return "boudingAnnotations.csv" in self.allFiles
+
+    def createCSV (self) :
+        with open(self.pathFolder+"\\boudingAnnotations.csv", "w",newline='') as file :
+            writer = csv.writer(file)
+            writer.writerow(["pathFile","x1","y1","x2","y2","label"])
+
+    def openCSV (self) :
+        print("try to open the file")
+        with open(self.pathFolder+"\\boudingAnnotations.csv", "r") as file:
+            reader = csv.DictReader(file)
+            for row in reader :
+                self.data.append(dict(row))
+        print("all data is in data variable")
+
 
 
 

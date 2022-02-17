@@ -41,7 +41,8 @@ class Ui_MainWindow(object):
         self.currentImgLabel = QtWidgets.QLabel("XXXX/NNNN")
         self.rightBtn = QtWidgets.QPushButton(">")
         self.view = QtWidgets.QGraphicsView()
-        self.scene = QtWidgets.QGraphicsScene(self.view)
+        self.scene = QtWidgets.QGraphicsScene()
+        self.view.setScene(self.scene)
 
     def initLayout(self, MainWindow) :
         self.hbox = QtWidgets.QHBoxLayout(self.centralwidget)
@@ -67,6 +68,14 @@ class Ui_MainWindow(object):
         fname = QtWidgets.QFileDialog.getExistingDirectory()
         if fname :
             self.core.sendFolder(fname)
+
+    def setImgLabel(self, label) :
+        self.currentImgLabel.setText(label)
+
+    def loadImage(self, pathImage) :
+        print(pathImage)
+        self.currentImage = self.scene.addPixmap(QtGui.QPixmap(pathImage))
+        self.currentImage.setPos(0,0)
 
 if __name__ == "__main__" :
     app = QtWidgets.QApplication(sys.argv)
