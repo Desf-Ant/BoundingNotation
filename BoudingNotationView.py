@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from BoudingNotationCore import *
+from CustomGraphicsScene import *
 import sys
 
 
@@ -10,6 +11,7 @@ class Ui_MainWindow(object):
 
     def setCore(self, core) :
         self.core = core
+        self.scene.setCore(self.core)
 
     def setupUi(self, app, MainWindow) :
         screen = app.primaryScreen()
@@ -41,7 +43,7 @@ class Ui_MainWindow(object):
         self.currentImgLabel = QtWidgets.QLabel("XXXX/NNNN")
         self.rightBtn = QtWidgets.QPushButton(">")
         self.view = QtWidgets.QGraphicsView()
-        self.scene = QtWidgets.QGraphicsScene()
+        self.scene = CustomGraphicsScene()
         self.view.setScene(self.scene)
 
     def initLayout(self, MainWindow) :
@@ -85,6 +87,12 @@ class Ui_MainWindow(object):
     def didTapOnRightBtn(self) :
         print("next image")
         self.core.tapOnNextButton()
+
+    def clearScene(self) :
+        self.scene.clear()
+
+    def drawRect(self,x1,y1,x2,y2) :
+        self.scene.drawRect(x1,y1,x2,y2)
 
 
 if __name__ == "__main__" :
