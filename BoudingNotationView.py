@@ -90,6 +90,7 @@ class Ui_MainWindow(object):
 
     def clearScene(self) :
         self.scene.clear()
+        self.scene.clearRect()
 
     def drawRect(self,x1,y1,x2,y2) :
         self.scene.drawRect(x1,y1,x2,y2)
