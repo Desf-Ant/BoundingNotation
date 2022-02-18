@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QGraphicsScene
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPen, QColor
+from CustomGraphicsRectItem import *
 
 class CustomGraphicsScene(QGraphicsScene) :
 
@@ -46,7 +47,9 @@ class CustomGraphicsScene(QGraphicsScene) :
                 self.rects[j].setPen(self.defaultPen)
 
     def drawRect(self,x1,y1,x2,y2) :
-        self.rects.append(self.addRect(x1,y1,x2-x1,y2-y1,self.defaultPen))
+        rect = CustomGraphicsRectItem(x1,y1,x2,y2,self.defaultPen)
+        self.rects.append(rect)
+        self.addItem(rect)
 
     def clearRect(self) :
         self.rects.clear()
