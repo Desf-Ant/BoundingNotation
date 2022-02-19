@@ -39,7 +39,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     def initComponents(self):
         self.centralwidget = QtWidgets.QWidget(self)
         self.setCentralWidget(self.centralwidget)
-        self.rectLabel = QtWidgets.QLabel("Rectangle")
+        self.defaultLabel = QtWidgets.QLabel("Default Label :")
+        self.defaultLabelEdit = QtWidgets.QLineEdit()
+        self.defaultLabelEdit.setFixedWidth(self.wwin/6)
         self.scrollView = QtWidgets.QScrollArea()
         self.scrollViewContent = QtWidgets.QWidget()
         self.scrollView.setWidget(self.scrollViewContent)
@@ -61,8 +63,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.scrollViewContent.setLayout(self.vboxScroll)
 
         self.hbox.addLayout(self.vbox)
-        self.vbox.addWidget(self.rectLabel)
-        self.rectLabel.setAlignment(QtCore.Qt.AlignHCenter)
+        self.vbox.addWidget(self.defaultLabel)
+        self.vbox.addWidget(self.defaultLabelEdit)
         self.vbox.addWidget(self.scrollView)
         self.vbox.addLayout(self.hbox2)
         self.hbox.addWidget(self.view)
@@ -76,6 +78,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.openAction.triggered.connect(self.openFolder)
         self.leftBtn.clicked.connect(self.didTapOnLeftBtn)
         self.rightBtn.clicked.connect(self.didTapOnRightBtn)
+        self.defaultLabelEdit.textChanged.connect(self.didEditDefaultLabel)
 
     def openFolder(self) :
         fname = QtWidgets.QFileDialog.getExistingDirectory()
@@ -125,6 +128,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         layout.addWidget(line)
         layout.addWidget(suppBtn)
         self.core.addLine(line, suppBtn)
+
+    def didEditDefaultLabel(self) :
+        self.core.setDefaultLabel(self.sender().text())
 
     def wantFocus(self) :
         self.core.tapTextEditLine(self.sender().text())

@@ -10,6 +10,7 @@ class BoudingNotationCore :
     def __init__(self) :
         self.view = None
         self.pathFolder = ""
+        self.defaultLabel = ""
         self.allFiles = []
         self.rowData = []
         self.data = {}
@@ -82,7 +83,7 @@ class BoudingNotationCore :
         if len(self.allFiles) > 0 :
             x1, x2 = min(p1.x(),p2.x()), max(p1.x(),p2.x())
             y1, y2 = min(p1.y(),p2.y()), max(p1.y(),p2.y())
-            self.data[self.allFiles[self.currentImageIndex]].append({"x1":x1,"y1":y1,"x2":x2,"y2":y2,"label":""})
+            self.data[self.allFiles[self.currentImageIndex]].append({"x1":x1,"y1":y1,"x2":x2,"y2":y2,"label":self.defaultLabel})
             self.update()
 
     def addLine (self, editLine, supBtn) :
@@ -94,6 +95,9 @@ class BoudingNotationCore :
 
     def getSuppBtnLine(self, index) :
         return self.supBtnLines[index]
+
+    def setDefaultLabel(self, label) :
+        self.defaultLabel = label
 
     def tapOnPrevButton(self) :
         if self.currentImageIndex > 0 and len(self.allFiles) > 0:
