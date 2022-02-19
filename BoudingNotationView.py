@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from BoudingNotationCore import *
 from CustomGraphicsScene import *
+from CustomQPushButton import *
 import sys
 
 
@@ -111,10 +112,10 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     def drawRect(self,x1,y1,x2,y2) :
         self.scene.drawRect(x1,y1,x2,y2)
 
-    def populateScrollContent(self) :
+    def populateScrollContent(self,index) :
         layout = QtWidgets.QHBoxLayout()
         line = QtWidgets.QLineEdit()
-        suppBtn = QtWidgets.QPushButton("X")
+        suppBtn = CustomQPushButton(index,"X")
         line.returnPressed.connect(self.didTapOnEditLine)
         suppBtn.clicked.connect(self.didTapOnSuppBtn)
         self.vboxScroll.addLayout(layout)
@@ -126,7 +127,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         print("press Enter")
 
     def didTapOnSuppBtn(self) :
-        print("press supp")
+        self.core.tapOnSuppBtn(self.sender().getIndex())
 
     # def sayNumber(self) :
     #     for i, l in enumerate( self.lines) :

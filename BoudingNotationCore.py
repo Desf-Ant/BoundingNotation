@@ -37,9 +37,9 @@ class BoudingNotationCore :
         self.supBtnLines.clear()
         self.view.loadImage(self.pathFolder + "/" +self.allFiles[self.currentImageIndex])
         self.view.setImgLabel(str(self.currentImageIndex+1) + "/" + str(len(self.allFiles)))
-        for r in self.data[self.allFiles[self.currentImageIndex]] :
+        for i, r in enumerate(self.data[self.allFiles[self.currentImageIndex]]) :
             self.view.drawRect(int(r["x1"]),int(r["y1"]),int(r["x2"]),int(r["y2"]))
-            self.view.populateScrollContent()
+            self.view.populateScrollContent(i)
 
     def getAllFiles(self) :
         print("get all files")
@@ -108,8 +108,9 @@ class BoudingNotationCore :
     def tapOnEditLine(self) :
         pass
 
-    def tapOnSuppBtn(self) :
-        pass
+    def tapOnSuppBtn(self,index) :
+        self.data[self.allFiles[self.currentImageIndex]].pop(index)
+        self.update()
 
 
 if __name__ == "__main__" :
