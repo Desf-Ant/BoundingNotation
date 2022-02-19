@@ -11,6 +11,7 @@ class BoudingNotationCore :
         self.view = None
         self.pathFolder = ""
         self.defaultLabel = ""
+        self.mode = 1
         self.allFiles = []
         self.rowData = []
         self.data = {}
@@ -20,6 +21,7 @@ class BoudingNotationCore :
 
     def setView(self, view):
         self.view = view
+        self.view.setRadioBtnCheck(1)
 
     def sendFolder(self, path) :
         self.pathFolder = path
@@ -89,6 +91,12 @@ class BoudingNotationCore :
     def addLine (self, editLine, supBtn) :
         self.editLines.append(editLine)
         self.supBtnLines.append(supBtn)
+
+    def getMode(self) :
+        return self.mode
+
+    def setMode(self, mode):
+        self.mode = mode
 
     def getEditLine(self, index) :
         return self.editLines[index]

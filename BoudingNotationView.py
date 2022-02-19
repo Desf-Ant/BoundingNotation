@@ -42,6 +42,16 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.defaultLabel = QtWidgets.QLabel("Default Label :")
         self.defaultLabelEdit = QtWidgets.QLineEdit()
         self.defaultLabelEdit.setFixedWidth(self.wwin/6)
+        self.groupMode = QtWidgets.QButtonGroup()
+        self.drawModeBtn = QtWidgets.QRadioButton("Draw")
+        self.moveModeBtn = QtWidgets.QRadioButton("Move")
+        self.editModeBtn = QtWidgets.QRadioButton("Edit")
+        self.groupMode.addButton(self.drawModeBtn)
+        self.groupMode.addButton(self.moveModeBtn)
+        self.groupMode.addButton(self.editModeBtn)
+        self.groupMode.setId(self.drawModeBtn,1)
+        self.groupMode.setId(self.moveModeBtn,2)
+        self.groupMode.setId(self.editModeBtn,3)
         self.scrollView = QtWidgets.QScrollArea()
         self.scrollViewContent = QtWidgets.QWidget()
         self.scrollView.setWidget(self.scrollViewContent)
@@ -65,6 +75,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.hbox.addLayout(self.vbox)
         self.vbox.addWidget(self.defaultLabel)
         self.vbox.addWidget(self.defaultLabelEdit)
+        self.vbox.addWidget(self.drawModeBtn)
+        self.vbox.addWidget(self.moveModeBtn)
+        self.vbox.addWidget(self.editModeBtn)
         self.vbox.addWidget(self.scrollView)
         self.vbox.addLayout(self.hbox2)
         self.hbox.addWidget(self.view)
@@ -79,6 +92,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.leftBtn.clicked.connect(self.didTapOnLeftBtn)
         self.rightBtn.clicked.connect(self.didTapOnRightBtn)
         self.defaultLabelEdit.textChanged.connect(self.didEditDefaultLabel)
+        self.groupMode.buttonClicked.connect(self.changeMode)
+
+    def changeMode(self, btn):
+        print("mode changer à ",self.groupMode.id(btn))
+        self.core.setMode(self.groupMode.id(btn))
 
     def openFolder(self) :
         fname = QtWidgets.QFileDialog.getExistingDirectory()
@@ -87,6 +105,11 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
     def setImgLabel(self, label) :
         self.currentImgLabel.setText(label)
+
+    def setRadioBtnCheck(self, index) :
+        if index ==  1 : self.drawModeBtn.setChecked(True)
+        elif index == 2: self.moveModeBtn.setChecked(True)
+        else : self.editModeBtn.setChecked(True)
 
     def loadImage(self, pathImage) :
         print(pathImage)
@@ -110,7 +133,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
             self.vboxScroll.itemAt(i).removeWidget(self.core.getEditLine(i))
             self.vboxScroll.itemAt(i).removeWidget(self.core.getSuppBtnLine(i))
             self.vboxScroll.removeItem(self.vboxScroll.itemAt(i))
-
 
     def drawRect(self,x1,y1,x2,y2) :
         self.scene.drawRect(x1,y1,x2,y2)
