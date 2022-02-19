@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QGraphicsRectItem
+from PyQt5.QtWidgets import QGraphicsRectItem, QGraphicsItem
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPen, QColor
 
@@ -8,3 +8,4 @@ class CustomGraphicsRectItem(QGraphicsRectItem) :
         super().__init__()
         self.setRect(x1,y1,x2-x1,y2-y1)
         self.setPen(pen)
+        self.setFlag(QGraphicsItem.ItemIsMovable, True)
