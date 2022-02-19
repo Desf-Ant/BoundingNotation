@@ -119,20 +119,28 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         suppBtn = CustomQPushButton(index,"X")
         line.returnPressed.connect(self.didPressEnterEditLine)
         line.textChanged.connect(self.didTapTextEditLine)
+        line.cursorPositionChanged.connect(self.wantFocus)
         suppBtn.clicked.connect(self.didTapOnSuppBtn)
         self.vboxScroll.addLayout(layout)
         layout.addWidget(line)
         layout.addWidget(suppBtn)
         self.core.addLine(line, suppBtn)
 
+    def wantFocus(self) :
+        self.core.tapTextEditLine(self.sender().text())
+
     def didPressEnterEditLine(self) :
         self.sender().clearFocus()
+        self.scene.deselectAll()
 
     def didTapTextEditLine(self) :
         self.core.tapTextEditLine(self.sender().text())
 
     def didTapOnSuppBtn(self) :
         self.core.tapOnSuppBtn(self.sender().getIndex())
+
+    def selectRectFromIndex(self,index) :
+        self.scene.selecteRect(index)
 
 
 if __name__ == "__main__" :

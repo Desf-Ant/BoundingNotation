@@ -108,6 +108,7 @@ class BoudingNotationCore :
     def tapTextEditLine(self,text) :
         for i, l in enumerate( self.editLines) :
             if l.hasFocus() :
+                self.view.selectRectFromIndex(i)
                 self.data[self.allFiles[self.currentImageIndex]][i]["label"] = text
 
     def tapOnSuppBtn(self,index) :

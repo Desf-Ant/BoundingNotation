@@ -26,25 +26,29 @@ class CustomGraphicsScene(QGraphicsScene) :
         self.tempStopPoint = event.scenePos()
         if abs(self.tempStartPoint.x() - self.tempStopPoint.x()) < 10 and  abs(self.tempStartPoint.y() - self.tempStopPoint.y()) < 10 :
             # On ne créer pas de rect et on compte ca comme un clic
-            self.selecteRect(event)
+            self.selectFromEvent(event)
             return
         self.core.addRect(self.tempStartPoint, self.tempStopPoint)
 
     def mouseDoubleClickEvent(self,event):
-        self.selecteRect(event)
+        self.selectFromEvent(event)
 
-    def selecteRect(self, event) :
-        i = -1
-        # Met en rouge le rect selected
-        for j, r in enumerate(self.rects) :
+    def selectFromEvent(self, event) :
+        for i, r in enumerate(self.rects) :
             if r.rect().contains(event.scenePos()) :
-                r.setPen(self.selectedPen)
-                i = j
+                self.selecteRect(i)
                 break
-        # Remet tous les autres en couleur normale
-        for j in range(len(self.rects)) :
-            if j != i :
-                self.rects[j].setPen(self.defaultPen)
+        self.deselectAll()
+
+    def deselectAll(self) :
+        # Remet en normal tous les rect
+        for r in self.rects :
+            r.setPen(self.defaultPen)
+
+    def selecteRect(self, index) :
+        self.deselectAll()
+        # Met en rouge le rect specific
+        self.rects[index].setPen(self.selectedPen)
 
     def drawRect(self,x1,y1,x2,y2) :
         rect = CustomGraphicsRectItem(x1,y1,x2,y2,self.defaultPen)
