@@ -34,11 +34,12 @@ class CustomGraphicsScene(QGraphicsScene) :
         self.selectFromEvent(event)
 
     def selectFromEvent(self, event) :
+        index = None
         for i, r in enumerate(self.rects) :
             if r.rect().contains(event.scenePos()) :
-                self.selecteRect(i)
+                index = i
                 break
-        self.deselectAll()
+        self.selecteRect(index)
 
     def deselectAll(self) :
         # Remet en normal tous les rect
@@ -48,7 +49,7 @@ class CustomGraphicsScene(QGraphicsScene) :
     def selecteRect(self, index) :
         self.deselectAll()
         # Met en rouge le rect specific
-        self.rects[index].setPen(self.selectedPen)
+        if index is not None : self.rects[index].setPen(self.selectedPen)
 
     def drawRect(self,x1,y1,x2,y2) :
         rect = CustomGraphicsRectItem(x1,y1,x2,y2,self.defaultPen)
