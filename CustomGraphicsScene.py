@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QGraphicsScene
+from PyQt5.QtWidgets import QGraphicsScene, QGraphicsItem
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPen, QColor
 from CustomGraphicsRectItem import *
@@ -44,15 +44,15 @@ class CustomGraphicsScene(QGraphicsScene) :
     def deselectAll(self) :
         # Remet en normal tous les rect
         for r in self.rects :
-            r.setPen(self.defaultPen)
+            r.deselect()
 
     def selecteRect(self, index) :
         self.deselectAll()
         # Met en rouge le rect specific
-        if index is not None : self.rects[index].setPen(self.selectedPen)
+        if index is not None : self.rects[index].select()
 
     def drawRect(self,x1,y1,x2,y2) :
-        rect = CustomGraphicsRectItem(x1,y1,x2,y2,self.defaultPen)
+        rect = CustomGraphicsRectItem(self.defaultPen, self.selectedPen, x1,y1,x2,y2)
         self.rects.append(rect)
         self.addItem(rect)
 
