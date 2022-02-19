@@ -39,7 +39,7 @@ class BoudingNotationCore :
         self.view.setImgLabel(str(self.currentImageIndex+1) + "/" + str(len(self.allFiles)))
         for i, r in enumerate(self.data[self.allFiles[self.currentImageIndex]]) :
             self.view.drawRect(int(r["x1"]),int(r["y1"]),int(r["x2"]),int(r["y2"]))
-            self.view.populateScrollContent(i)
+            self.view.populateScrollContent(i,r["label"])
 
     def getAllFiles(self) :
         print("get all files")
@@ -105,8 +105,10 @@ class BoudingNotationCore :
             self.currentImageIndex += 1
             self.update()
 
-    def tapOnEditLine(self) :
-        pass
+    def tapTextEditLine(self,text) :
+        for i, l in enumerate( self.editLines) :
+            if l.hasFocus() :
+                self.data[self.allFiles[self.currentImageIndex]][i]["label"] = text
 
     def tapOnSuppBtn(self,index) :
         self.data[self.allFiles[self.currentImageIndex]].pop(index)

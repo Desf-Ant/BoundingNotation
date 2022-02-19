@@ -112,27 +112,27 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     def drawRect(self,x1,y1,x2,y2) :
         self.scene.drawRect(x1,y1,x2,y2)
 
-    def populateScrollContent(self,index) :
+    def populateScrollContent(self,index,label) :
         layout = QtWidgets.QHBoxLayout()
         line = QtWidgets.QLineEdit()
+        line.setText(label)
         suppBtn = CustomQPushButton(index,"X")
-        line.returnPressed.connect(self.didTapOnEditLine)
+        line.returnPressed.connect(self.didPressEnterEditLine)
+        line.textChanged.connect(self.didTapTextEditLine)
         suppBtn.clicked.connect(self.didTapOnSuppBtn)
         self.vboxScroll.addLayout(layout)
         layout.addWidget(line)
         layout.addWidget(suppBtn)
         self.core.addLine(line, suppBtn)
 
-    def didTapOnEditLine(self) :
-        print("press Enter")
+    def didPressEnterEditLine(self) :
+        self.sender().clearFocus()
+
+    def didTapTextEditLine(self) :
+        self.core.tapTextEditLine(self.sender().text())
 
     def didTapOnSuppBtn(self) :
         self.core.tapOnSuppBtn(self.sender().getIndex())
-
-    # def sayNumber(self) :
-    #     for i, l in enumerate( self.lines) :
-    #         if l.hasFocus() :
-    #             print("focus on ",i)
 
 
 if __name__ == "__main__" :
