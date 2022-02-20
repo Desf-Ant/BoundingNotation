@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QGraphicsScene, QGraphicsItem
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPen, QColor
+from PyQt5.QtGui import QPen, QBrush, QColor
 from CustomGraphicsRectItem import *
 
 class CustomGraphicsScene(QGraphicsScene) :
@@ -58,6 +58,7 @@ class CustomGraphicsScene(QGraphicsScene) :
         self.currentRect = None
         for r in self.rects :
             r.deselect()
+        self.core.update()
 
     def selecteRect(self, index) :
         self.deselectAll()
@@ -66,11 +67,17 @@ class CustomGraphicsScene(QGraphicsScene) :
             self.currentRect = self.rects[index]
             self.delta = self.tempStartPoint - self.currentRect.rect().topLeft()
             self.currentRect.select()
+            if self.core.getMode() == 3 :
+                self.drawHandler(self.currentRect.getHandler())
 
     def drawRect(self,x1,y1,x2,y2) :
         rect = CustomGraphicsRectItem(self.defaultPen, self.selectedPen, x1,y1,x2,y2)
         self.rects.append(rect)
         self.addItem(rect)
+
+    def drawHandler(self, rects) :
+        for h in rects :
+            self.addRect(h, QPen(Qt.magenta), QBrush(Qt.magenta))
 
     def clearRect(self) :
         self.rects.clear()

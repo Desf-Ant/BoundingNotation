@@ -102,8 +102,9 @@ class BoudingNotationCore :
         return self.mode
 
     def setMode(self, mode):
-        self.mode = mode
         print("mode changer à",mode)
+        self.mode = mode
+        self.update()
 
     def getEditLine(self, index) :
         return self.editLines[index]
