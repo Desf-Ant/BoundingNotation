@@ -9,6 +9,8 @@ class CustomGraphicsRectItem(QGraphicsRectItem) :
         self.defaultPen = defaultPen
         self.selectedPen = selectedPen
         self.setRect(x1,y1,x2-x1,y2-y1)
+        self.w = x2-x1
+        self.h = y2-y1
         self.setPen(defaultPen)
 
     def deselect(self) :
@@ -16,3 +18,6 @@ class CustomGraphicsRectItem(QGraphicsRectItem) :
 
     def select(self):
         self.setPen(self.selectedPen)
+
+    def changePos(self, x,y) :
+        self.setRect(x,y,self.w,self.h)

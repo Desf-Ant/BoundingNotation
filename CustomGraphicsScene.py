@@ -11,6 +11,7 @@ class CustomGraphicsScene(QGraphicsScene) :
         self.tempStopPoint = None
         self.defaultPen = QPen(QColor(55,255,55),5)
         self.selectedPen = QPen(QColor(255,0,0),5)
+        self.currentRect = None
         self.core = core
         self.rects = []
 
@@ -20,6 +21,8 @@ class CustomGraphicsScene(QGraphicsScene) :
     def mousePressEvent(self, event):
         print("start",event.scenePos().x(), event.scenePos().y())
         self.tempStartPoint = event.scenePos()
+        if self.core.getMode() == 2 :
+            self.selectFromEvent(event)
 
     def mouseReleaseEvent(self, event) :
         print("stop",event.scenePos().x(), event.scenePos().y())
@@ -28,10 +31,19 @@ class CustomGraphicsScene(QGraphicsScene) :
             # On ne créer pas de rect et on compte ca comme un clic
             self.selectFromEvent(event)
             return
-        self.core.addRect(self.tempStartPoint, self.tempStopPoint)
+        if self.core.getMode() == 1 :
+            self.core.addRect(self.tempStartPoint, self.tempStopPoint)
+        elif self.core.getMode() == 2 :
+            self.core.updateData(self.rects.index(self.currentRect),self.currentRect.rect())
 
     def mouseDoubleClickEvent(self,event):
         self.selectFromEvent(event)
+
+    def mouseMoveEvent(self,event) :
+        if len(self.rects) < 0 : return
+        if self.core.getMode() == 2:
+            newPos = event.scenePos()
+            self.currentRect.changePos(newPos.x()-self.delta.x(),newPos.y()-self.delta.y())
 
     def selectFromEvent(self, event) :
         index = None
@@ -43,13 +55,17 @@ class CustomGraphicsScene(QGraphicsScene) :
 
     def deselectAll(self) :
         # Remet en normal tous les rect
+        self.currentRect = None
         for r in self.rects :
             r.deselect()
 
     def selecteRect(self, index) :
         self.deselectAll()
         # Met en rouge le rect specific
-        if index is not None : self.rects[index].select()
+        if index is not None :
+            self.currentRect = self.rects[index]
+            self.delta = self.tempStartPoint - self.currentRect.rect().topLeft()
+            self.currentRect.select()
 
     def drawRect(self,x1,y1,x2,y2) :
         rect = CustomGraphicsRectItem(self.defaultPen, self.selectedPen, x1,y1,x2,y2)

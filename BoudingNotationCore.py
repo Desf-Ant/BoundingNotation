@@ -88,6 +88,12 @@ class BoudingNotationCore :
             self.data[self.allFiles[self.currentImageIndex]].append({"x1":x1,"y1":y1,"x2":x2,"y2":y2,"label":self.defaultLabel})
             self.update()
 
+    def updateData(self, index, rect) :
+        self.data[self.allFiles[self.currentImageIndex]][index]["x1"] = rect.getCoords()[0]
+        self.data[self.allFiles[self.currentImageIndex]][index]["y1"] = rect.getCoords()[1]
+        self.data[self.allFiles[self.currentImageIndex]][index]["x2"] = rect.getCoords()[2]
+        self.data[self.allFiles[self.currentImageIndex]][index]["y2"] = rect.getCoords()[3]
+
     def addLine (self, editLine, supBtn) :
         self.editLines.append(editLine)
         self.supBtnLines.append(supBtn)
@@ -97,6 +103,7 @@ class BoudingNotationCore :
 
     def setMode(self, mode):
         self.mode = mode
+        print("mode changer à",mode)
 
     def getEditLine(self, index) :
         return self.editLines[index]

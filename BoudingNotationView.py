@@ -95,7 +95,6 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.groupMode.buttonClicked.connect(self.changeMode)
 
     def changeMode(self, btn):
-        print("mode changer à ",self.groupMode.id(btn))
         self.core.setMode(self.groupMode.id(btn))
 
     def openFolder(self) :
