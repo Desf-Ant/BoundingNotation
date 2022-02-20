@@ -169,6 +169,17 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     def selectRectFromIndex(self,index) :
         self.scene.selecteRect(index)
 
+    def keyPressEvent(self, event):
+        if event.key()== Qt.Key_D :
+            self.setRadioBtnCheck(1)
+            self.changeMode(self.drawModeBtn)
+        if event.key()== Qt.Key_M :
+            self.setRadioBtnCheck(2)
+            self.changeMode(self.moveModeBtn)
+        if event.key()== Qt.Key_E :
+            self.setRadioBtnCheck(3)
+            self.changeMode(self.editModeBtn)
+
 
 if __name__ == "__main__" :
     app = QtWidgets.QApplication(sys.argv)
