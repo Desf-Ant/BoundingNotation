@@ -23,9 +23,9 @@ class CustomGraphicsScene(QGraphicsScene) :
     def mousePressEvent(self, event):
         print("start",event.scenePos().x(), event.scenePos().y())
         self.tempStartPoint = event.scenePos()
-        if self.core.getMode() == 2 :
+        if self.core.getMode() == 2 and self.core.filesLoaded():
             self.selectFromEvent(event)
-        if self.core.getMode() == 3 and len(self.handlers) > 0:
+        if self.core.getMode() == 3 and len(self.handlers) > 0 and self.core.filesLoaded():
             self.selectHandler(event)
 
     def mouseReleaseEvent(self, event) :
@@ -37,9 +37,9 @@ class CustomGraphicsScene(QGraphicsScene) :
             return
         if self.core.getMode() == 1 :
             self.core.addRect(self.tempStartPoint, self.tempStopPoint)
-        elif self.core.getMode() == 2 :
+        elif self.core.getMode() == 2 and self.currentRect is not None:
             self.core.updateData(self.rects.index(self.currentRect),self.currentRect.rect())
-        elif self.core.getMode() == 3 :
+        elif self.core.getMode() == 3 and self.currentRect is not None:
             self.core.updateData(self.rects.index(self.currentRect),self.currentRect.rect())
 
     def mouseDoubleClickEvent(self,event):
@@ -49,7 +49,8 @@ class CustomGraphicsScene(QGraphicsScene) :
         if len(self.rects) < 0 : return
         if self.core.getMode() == 2:
             newPos = event.scenePos()
-            self.currentRect.changePos(newPos.x()-self.delta.x(),newPos.y()-self.delta.y())
+            if self.currentRect is not None :
+                self.currentRect.changePos(newPos.x()-self.delta.x(),newPos.y()-self.delta.y())
         if self.core.getMode() == 3 and self.currentHandler is not None :
             self.moveHandler(event)
 
@@ -63,11 +64,13 @@ class CustomGraphicsScene(QGraphicsScene) :
 
     def deselectAll(self) :
         # Remet en normal tous les rect
-        self.currentRect = None
-        self.currentHandler = None
         for r in self.rects :
             r.deselect()
-        self.core.update()
+        if self.currentRect is not None :
+            self.core.update()
+        self.currentRect = None
+        self.currentHandler = None
+        self.handlers.clear()
 
     def selecteRect(self, index) :
         self.deselectAll()
@@ -81,6 +84,8 @@ class CustomGraphicsScene(QGraphicsScene) :
 
     def selectHandler(self,event) :
         for i, h in enumerate(self.handlers):
+            print(i, len(self.handlers))
+            print(h, h.rect(), event.scenePos())
             if h.rect().contains(event.scenePos()):
                 self.currentHandler = h
 

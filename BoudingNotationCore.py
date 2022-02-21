@@ -54,6 +54,9 @@ class BoudingNotationCore :
         self.openCSV()
         self.convertData()
 
+    def filesLoaded(self) :
+        return len(self.allFiles) > 0
+
     def cleanAllFiles(self) :
         for element in self.allFiles :
             if element[-4:] != ".jpg" and element[-4:] != ".png" :
@@ -104,7 +107,8 @@ class BoudingNotationCore :
     def setMode(self, mode):
         print("mode changer à",mode)
         self.mode = mode
-        self.update()
+        if len(self.allFiles) > 0 :
+            self.update()
 
     def getEditLine(self, index) :
         return self.editLines[index]
