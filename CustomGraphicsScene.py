@@ -12,8 +12,10 @@ class CustomGraphicsScene(QGraphicsScene) :
         self.defaultPen = QPen(QColor(55,255,55),5)
         self.selectedPen = QPen(QColor(255,0,0),5)
         self.currentRect = None
+        self.currentHandler = None
         self.core = core
         self.rects = []
+        self.handlers = []
 
     def setCore(self, core) :
         self.core = core
@@ -23,6 +25,8 @@ class CustomGraphicsScene(QGraphicsScene) :
         self.tempStartPoint = event.scenePos()
         if self.core.getMode() == 2 :
             self.selectFromEvent(event)
+        if self.core.getMode() == 3 and len(self.handlers) > 0:
+            self.selectHandler(event)
 
     def mouseReleaseEvent(self, event) :
         print("stop",event.scenePos().x(), event.scenePos().y())
@@ -35,6 +39,8 @@ class CustomGraphicsScene(QGraphicsScene) :
             self.core.addRect(self.tempStartPoint, self.tempStopPoint)
         elif self.core.getMode() == 2 :
             self.core.updateData(self.rects.index(self.currentRect),self.currentRect.rect())
+        elif self.core.getMode() == 3 :
+            self.core.updateData(self.rects.index(self.currentRect),self.currentRect.rect())
 
     def mouseDoubleClickEvent(self,event):
         self.selectFromEvent(event)
@@ -44,6 +50,8 @@ class CustomGraphicsScene(QGraphicsScene) :
         if self.core.getMode() == 2:
             newPos = event.scenePos()
             self.currentRect.changePos(newPos.x()-self.delta.x(),newPos.y()-self.delta.y())
+        if self.core.getMode() == 3 and self.currentHandler is not None :
+            self.moveHandler(event)
 
     def selectFromEvent(self, event) :
         index = None
@@ -56,6 +64,7 @@ class CustomGraphicsScene(QGraphicsScene) :
     def deselectAll(self) :
         # Remet en normal tous les rect
         self.currentRect = None
+        self.currentHandler = None
         for r in self.rects :
             r.deselect()
         self.core.update()
@@ -70,14 +79,36 @@ class CustomGraphicsScene(QGraphicsScene) :
             if self.core.getMode() == 3 :
                 self.drawHandler(self.currentRect.getHandler())
 
+    def selectHandler(self,event) :
+        for i, h in enumerate(self.handlers):
+            if h.rect().contains(event.scenePos()):
+                self.currentHandler = h
+
+    def moveHandler(self,event) :
+        if self.handlers.index(self.currentHandler) == 0 :
+            self.currentRect.changeY1(event.scenePos().y())
+        if self.handlers.index(self.currentHandler) == 1 :
+            self.currentRect.changeX2(event.scenePos().x())
+        if self.handlers.index(self.currentHandler) == 2 :
+            self.currentRect.changeY2(event.scenePos().y())
+        if self.handlers.index(self.currentHandler) == 3 :
+            self.currentRect.changeX1(event.scenePos().x())
+        self.currentRect.refreshHandlers()
+        self.refreshHandlers(self.currentRect.getHandler())
+
     def drawRect(self,x1,y1,x2,y2) :
         rect = CustomGraphicsRectItem(self.defaultPen, self.selectedPen, x1,y1,x2,y2)
         self.rects.append(rect)
         self.addItem(rect)
 
     def drawHandler(self, rects) :
+        self.handlers.clear()
         for h in rects :
-            self.addRect(h, QPen(Qt.magenta), QBrush(Qt.magenta))
+            self.handlers.append(self.addRect(h, QPen(Qt.magenta), QBrush(Qt.magenta)))
+
+    def refreshHandlers(self, rects):
+        for i, h in enumerate(rects) :
+            self.handlers[i].setRect(rects[i])
 
     def clearRect(self) :
         self.rects.clear()
