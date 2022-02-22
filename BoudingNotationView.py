@@ -14,6 +14,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     def setCore(self, core) :
         self.core = core
         self.scene.setCore(self.core)
+        self.initShortcut()
 
     def setupUi(self, app) :
         screen = app.primaryScreen()
@@ -94,6 +95,30 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.defaultLabelEdit.textChanged.connect(self.didEditDefaultLabel)
         self.groupMode.buttonClicked.connect(self.changeMode)
 
+    def initShortcut(self) :
+        self.shortSave = QtWidgets.QShortcut(QtGui.QKeySequence('Ctrl+S'), self)
+        self.shortDraw = QtWidgets.QShortcut(QtGui.QKeySequence('Ctrl+d'), self)
+        self.shortMove = QtWidgets.QShortcut(QtGui.QKeySequence('Ctrl+m'), self)
+        self.shortEdit = QtWidgets.QShortcut(QtGui.QKeySequence('Ctrl+e'), self)
+
+        self.shortSave.activated.connect(self.core.saveData)
+        self.shortDraw.activated.connect(self.changeModeToDraw)
+        self.shortMove.activated.connect(self.changeModeToMove)
+        self.shortEdit.activated.connect(self.changeModeToEdit)
+
+
+    def changeModeToDraw(self) :
+        self.setRadioBtnCheck(1)
+        self.changeMode(self.drawModeBtn)
+
+    def changeModeToMove(self) :
+        self.setRadioBtnCheck(2)
+        self.changeMode(self.moveModeBtn)
+
+    def changeModeToEdit(self) :
+        self.setRadioBtnCheck(3)
+        self.changeMode(self.editModeBtn)
+
     def changeMode(self, btn):
         self.core.setMode(self.groupMode.id(btn))
 
@@ -169,16 +194,17 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
     def selectRectFromIndex(self,index) :
         self.scene.selecteRect(index)
 
-    def keyPressEvent(self, event):
-        if event.key()== Qt.Key_D :
-            self.setRadioBtnCheck(1)
-            self.changeMode(self.drawModeBtn)
-        if event.key()== Qt.Key_M :
-            self.setRadioBtnCheck(2)
-            self.changeMode(self.moveModeBtn)
-        if event.key()== Qt.Key_E :
-            self.setRadioBtnCheck(3)
-            self.changeMode(self.editModeBtn)
+    # def keyPressEvent(self, event):
+    #     print(event.key())
+    #     if event.key()== Qt.Key_D :
+    #         self.setRadioBtnCheck(1)
+    #         self.changeMode(self.drawModeBtn)
+    #     if event.key()== Qt.Key_M :
+    #         self.setRadioBtnCheck(2)
+    #         self.changeMode(self.moveModeBtn)
+    #     if event.key()== Qt.Key_E :
+    #         self.setRadioBtnCheck(3)
+    #         self.changeMode(self.editModeBtn)
 
 
 if __name__ == "__main__" :
