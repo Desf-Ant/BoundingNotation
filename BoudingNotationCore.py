@@ -68,6 +68,19 @@ class BoudingNotationCore :
         for d in self.rowData :
             self.data[d["pathFile"]].append({"x1":d["x1"],"y1":d["y1"],"x2":d["x2"],"y2":d["y2"],"label":d["label"]})
 
+    def saveData(self):
+        if len(self.allFiles) <= 0 :
+            return 
+        with open(self.pathFolder+"\\boudingAnnotations.csv", "w",newline='') as file :
+            writer = csv.writer(file)
+            writer.writerow(["pathFile","x1","y1","x2","y2","label"])
+            for keyImage, valueAnnot in self.data.items() :
+                line = [keyImage,"","","","",""]
+                for val in valueAnnot :
+                    line[1],line[2],line[3],line[4],line[5] = int(val["x1"]),int(val["y1"]),int(val["x2"]),int(val["y2"]),val["label"]
+                    writer.writerow(line)
+
+
     def checkBoudingAnnot(self) :
         return "boudingAnnotations.csv" in self.allFiles
 
