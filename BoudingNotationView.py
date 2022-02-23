@@ -192,20 +192,14 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.core.tapOnSuppBtn(self.sender().getIndex())
 
     def selectRectFromIndex(self,index) :
-        self.scene.selecteRect(index)
+        if self.scene.getIndexRectSelected() != index :
+            self.scene.selecteRect(index)
 
-    # def keyPressEvent(self, event):
-    #     print(event.key())
-    #     if event.key()== Qt.Key_D :
-    #         self.setRadioBtnCheck(1)
-    #         self.changeMode(self.drawModeBtn)
-    #     if event.key()== Qt.Key_M :
-    #         self.setRadioBtnCheck(2)
-    #         self.changeMode(self.moveModeBtn)
-    #     if event.key()== Qt.Key_E :
-    #         self.setRadioBtnCheck(3)
-    #         self.changeMode(self.editModeBtn)
-
+    def mousePressEvent(self,event) :
+        r = self.view.rect()
+        r.setX(self.wwin/6)
+        if not r.contains(event.localPos().toPoint()) :
+            self.scene.deselectAll()
 
 if __name__ == "__main__" :
     app = QtWidgets.QApplication(sys.argv)

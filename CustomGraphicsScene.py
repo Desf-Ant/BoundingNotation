@@ -77,15 +77,18 @@ class CustomGraphicsScene(QGraphicsScene) :
         # Met en rouge le rect specific
         if index is not None :
             self.currentRect = self.rects[index]
-            self.delta = self.tempStartPoint - self.currentRect.rect().topLeft()
             self.currentRect.select()
+            if self.core.getMode() == 2 :
+                self.delta = self.tempStartPoint - self.currentRect.rect().topLeft()
             if self.core.getMode() == 3 :
                 self.drawHandler(self.currentRect.getHandler())
 
+    def getIndexRectSelected(self) :
+        if self.currentRect is not None:
+            return self.rects.index(self.currentRect)
+
     def selectHandler(self,event) :
         for i, h in enumerate(self.handlers):
-            print(i, len(self.handlers))
-            print(h, h.rect(), event.scenePos())
             if h.rect().contains(event.scenePos()):
                 self.currentHandler = h
 

@@ -70,7 +70,7 @@ class BoudingNotationCore :
 
     def saveData(self):
         if len(self.allFiles) <= 0 :
-            return 
+            return
         with open(self.pathFolder+"\\boudingAnnotations.csv", "w",newline='') as file :
             writer = csv.writer(file)
             writer.writerow(["pathFile","x1","y1","x2","y2","label"])
