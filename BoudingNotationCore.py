@@ -142,6 +142,11 @@ class BoudingNotationCore :
             self.currentImageIndex += 1
             self.update()
 
+    def changeCurrentImageIndex(self, index) :
+        if len(self.allFiles) > 0 and index > 0 and index <= len(self.allFiles) :
+            self.currentImageIndex = index - 1
+            self.update()
+
     def tapTextEditLine(self,text) :
         for i, l in enumerate( self.editLines) :
             if l.hasFocus() :

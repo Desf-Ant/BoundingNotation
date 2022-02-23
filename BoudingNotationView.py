@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication
 from BoudingNotationCore import *
 from CustomGraphicsScene import *
 from CustomQPushButton import *
+from BoudingNotationNavigatePopUp import *
 import sys
 
 
@@ -33,9 +34,16 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.setMenuBar(self.menubar)
         self.menuFichier = QtWidgets.QMenu()
         self.menuFichier.setTitle("File")
+        self.menuNavigate = QtWidgets.QMenu()
+        self.menuNavigate.setTitle("Navigate")
         self.menubar.addMenu(self.menuFichier)
+        self.menubar.addMenu(self.menuNavigate)
         self.openAction = QtWidgets.QAction("Open Folder")
+        self.saveAction = QtWidgets.QAction("Save")
         self.menuFichier.addAction(self.openAction)
+        self.menuFichier.addAction(self.saveAction)
+        self.navigateAction = QtWidgets.QAction("Navigate to")
+        self.menuNavigate.addAction(self.navigateAction)
 
     def initComponents(self):
         self.centralwidget = QtWidgets.QWidget(self)
@@ -90,6 +98,8 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 
     def initConnect(self) :
         self.openAction.triggered.connect(self.openFolder)
+        self.saveAction.triggered.connect(self.saveData)
+        self.navigateAction.triggered.connect(self.popNavigate)
         self.leftBtn.clicked.connect(self.didTapOnLeftBtn)
         self.rightBtn.clicked.connect(self.didTapOnRightBtn)
         self.defaultLabelEdit.textChanged.connect(self.didEditDefaultLabel)
@@ -101,11 +111,13 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.shortMove = QtWidgets.QShortcut(QtGui.QKeySequence('Ctrl+m'), self)
         self.shortEdit = QtWidgets.QShortcut(QtGui.QKeySequence('Ctrl+e'), self)
 
-        self.shortSave.activated.connect(self.core.saveData)
+        self.shortSave.activated.connect(self.saveData)
         self.shortDraw.activated.connect(self.changeModeToDraw)
         self.shortMove.activated.connect(self.changeModeToMove)
         self.shortEdit.activated.connect(self.changeModeToEdit)
 
+    def saveData(self) :
+        self.core.saveData()
 
     def changeModeToDraw(self) :
         self.setRadioBtnCheck(1)
@@ -195,11 +207,18 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         if self.scene.getIndexRectSelected() != index :
             self.scene.selecteRect(index)
 
+    def getIndexToNavigate(self, index) :
+        self.core.changeCurrentImageIndex(index)
+
     def mousePressEvent(self,event) :
         r = self.view.rect()
         r.setX(self.wwin/6)
         if not r.contains(event.localPos().toPoint()) :
             self.scene.deselectAll()
+
+    def popNavigate(self) :
+        pop = BoudingNotationNavigatePopUp(self)
+        pop.exec_()
 
 if __name__ == "__main__" :
     app = QtWidgets.QApplication(sys.argv)
